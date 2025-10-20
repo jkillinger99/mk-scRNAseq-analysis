@@ -232,8 +232,16 @@ dev.off()
 # find markers that define seurat clusters
 res4_markers <- FindAllMarkers(res4aggr_filtered)
 
+res4_markers %>%
+  group_by(cluster) %>%
+  dplyr::filter(avg_log2FC > 1) %>%
+  slice_head(n = 10) %>%
+  ungroup()
+
+
+FeaturePlot(res4_markers, features = c("Vwf", "Pf4", "Itga2b"))
+
 # find markers between conditions
-res4_markers_conditions <- FindMarkers(res4aggr_filtered, group.by = "Condition")
+res4_markers_conditions <- FindMarkers(res4aggr_filtered, group.by = "Condition", ident.1 = "oob", ident.2 = "poly")
 
-
-
+?FeaturePlot()
