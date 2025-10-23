@@ -217,7 +217,7 @@ table(Cluster = res4aggr_filtered$seurat_clusters, Label = res4aggr_filtered$Sin
 genenames <- de_allClusters$gene
 head(genenames)
 
-grep("gypc",genenames, ignore.case = TRUE, value = TRUE)
+grep("pdlim1",genenames, ignore.case = TRUE, value = TRUE)
 
 # some from DOI 10.1182/blood.2021010697.
 mk <- c("Vwf", "Pf4", "Itga2b", "Gp9", "Itgb3", "Gata2") 
@@ -231,8 +231,15 @@ precursors <- c("Prss57","Sox4","Hus1","Cdk6", "Egfl7","Cd34","Smim24") # Databa
 
 rbc <- c("Hba-a1", "Hba-a2", "Gypc")
 
+# from doi: 10.1038/s41392-022-01167-9
+
+mep <- c("Gata1","Gata2","Klf1","Blvrb","Tmem14c","Itga2b","Myc","Slc40a1") # Database does not have: ASHP, APOC1, HBD, CNR1PI, LINC00152
+mkp1 <- c("Gata1","Gata2","Plek","Mpo", "Pbx1","Slc40a1") # Database does not have FCER1A, CYTL1, 
+mkp2 <- c("Pf4","Nrgn","Plek","Rgs18","Pdlim1") # Database does not have PPBP, SDPR
+eryp <- c("")
+
 # swap out features mapping
 
-FeaturePlot(res4aggr_filtered, features = rbc)
+FeaturePlot(res4aggr_filtered, features = mkp2)
 
 # ref (8)
