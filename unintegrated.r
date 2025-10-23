@@ -217,10 +217,10 @@ table(Cluster = res4aggr_filtered$seurat_clusters, Label = res4aggr_filtered$Sin
 genenames <- de_allClusters$gene
 head(genenames)
 
-grep("pdlim1",genenames, ignore.case = TRUE, value = TRUE)
+grep("ptprc",genenames, ignore.case = TRUE, value = TRUE)
 
 # some from DOI 10.1182/blood.2021010697.
-mk <- c("Vwf", "Pf4", "Itga2b", "Gp9", "Itgb3", "Gata2") 
+mk <- c("Vwf", "Pf4", "Itga2b", "Gp9", "Itgb3", "Gata2", "Thbd") 
 
 # from ref (8), and include HSC, MEP, CMP, GMP
 precursors <- c("Prss57","Sox4","Hus1","Cdk6", "Egfl7","Cd34","Smim24") # Database does not have: SPINK2 (used "Hus1"), RP11-620J15.3M, KIA0125, CYTL1
@@ -237,9 +237,36 @@ mep <- c("Gata1","Gata2","Klf1","Blvrb","Tmem14c","Itga2b","Myc","Slc40a1") # Da
 mkp1 <- c("Gata1","Gata2","Plek","Mpo", "Pbx1","Slc40a1") # Database does not have FCER1A, CYTL1, 
 mkp2 <- c("Pf4","Nrgn","Plek","Rgs18","Pdlim1") # Database does not have PPBP, SDPR
 eryp <- c("")
+kelly_genes <- c("Mpl","Klf1","Epor", "Vwf","Mpo","Ptprc")
 
-# swap out features mapping
+# from (https://azimuth.hubmapconsortium.org/references/#Mouse%20-%20Pansci)
 
-FeaturePlot(res4aggr_filtered, features = mkp2)
+ery_blasts <- c("Slc25a21", "Specc1", "Zdhhc14", "Sptb","Bcl11a", "Ank1", "Rhag", "Hbb-bs", "Pvt1")
+
+# swap out features mapping here
+
+FeaturePlot(res4aggr_filtered, features = mk)
 
 # ref (8)
+
+## differential gene expression analysis
+
+pseudo_res4aggr_filtered <- AggregateExpression(res4aggr_filtered, assays = "RNA", return.seurat = T, group.by = c("Condition", "sample_id", "SCT_snn_res.0.8"))
+head(pseudo_res4aggr_filtered@assays$RNA$counts)
+pseudo_res4aggr_filtered@meta.data
+
+#BiocManager::install("DESeq2")
+library(DESeq2)
+
+Idents(pseudo_res4aggr_filtered)="Condition"
+bulk_pseudo_res4aggr_filtered_de = FindMarkers(pseudo_res4aggr_filtered, ident.1="poly", ident.2="oob", test.use="DESeq2")
+head(bulk_pseudo_res4aggr_filtered_de)
+
+
+scDE.genes = rownames(de_Conditions)[which(de_Conditions$p_val_adj<0.05)]
+bulkDE.genes = rownames(bulk_pseudo_res4aggr_filtered_de)[which(bulk_pseudo_res4aggr_filtered_de$p_val_adj<0.05)]
+length(scDE.genes)
+length(intersect(scDE.genes,bulkDE.genes))
+
+
+
