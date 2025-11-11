@@ -84,6 +84,9 @@ res4_umap_noT_condition <- DimPlot(res4aggr_filtered_noT, reduction = "umap",
 res4_umap_noT_sample <- DimPlot(res4aggr_filtered_noT, reduction = "umap", 
     group.by = "sample_id", label = TRUE)
 
+res4_umap_noT_cluster + res4_umap_noT_condition + res4_umap_noT_sample
+  
+
 set.seed(1234)
 
 res4aggr_filtered_noT <- PrepSCTFindMarkers(res4aggr_filtered_noT, verbose = T)
@@ -369,13 +372,13 @@ ggplot(de.12, aes(x = avg_log2FC, y = -log10(p_val_adj), color = sig)) +
 # use this function to search for specific gene names
 genenames <- de_allClustersnoT$gene
 # head(genenames)
-grep("Gpvi",genenames, ignore.case = TRUE, value = TRUE)
+grep("stxbp",genenames, ignore.case = TRUE, value = TRUE)
 
 # trying with a different set of markers
-MK_tc_mod2 <- c("Cd34", "Itga2b", "Mpl", "Gp5", " Stxbp3", "Plek", "Cd9", "Itgb3", "Vwf", "Pf4", "Fermt3", "Mmrn1", "Selp", "Pdgfb", "Gata1", "Zfpm1")
+MK_tc_modded <- c("Pf4", "Gp9", "Gp5", "Itga2b", "Itgb3", "Mpl", "Selp", "Mmrn1", "Plek", "Cd9", "Fermt3", "Flna", "Myh9", "Pdgfb", "Cxcr4", "Gata1", "Zfpm1", "Nfe2", "Stxbp3", "Cd34")
 
 # expression of markers across clusters
-DotPlot(res4aggr_filtered_noT, features = MK_tc_mod2, group.by = "seurat_clusters", cols = c("blue", "red"), dot.scale = 8) + theme(legend.position = "right")
+DotPlot(res4aggr_filtered_noT, features = MK_tc_modded, group.by = "seurat_clusters", cols = c("blue", "red"), dot.scale = 8) + theme(legend.position = "right") + coord_flip()
 
 # cell counts across cluster by sample id
 table(res4aggr_filtered_noT$seurat_clusters, res4aggr_filtered_noT$sample_id)
